@@ -1,0 +1,21 @@
+name: Omics Toolbox
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - typer
+  - loguru
+  - tqdm
+  - ipython
+  - jupyterlab
+  - matplotlib
+  - notebook
+  - numpy
+  - pandas
+  - scikit-learn
+  - ruff
+  - pip:
+    - python-dotenv
+    - mkdocs
+    - -e .
