@@ -1,21 +1,28 @@
-name: Omics Toolbox
+name: omics_toolbox
 channels:
   - conda-forge
+  - pytorch
+  - bioconda
 dependencies:
   - python=3.10
   - pip
   - typer
-  - loguru
   - tqdm
   - ipython
   - jupyterlab
   - matplotlib
   - notebook
-  - numpy
-  - pandas
+  - numpy 
+  - pandas=2.2.0
   - scikit-learn
   - ruff
+  - scanpy 
+  - python-igraph 
+  - leidenalg
   - pip:
     - python-dotenv
     - mkdocs
     - -e .
+    - mioflow
+    - phate
+    - meld

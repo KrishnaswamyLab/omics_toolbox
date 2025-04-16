@@ -1,10 +1,33 @@
-# omics_toolbox
+# Omics Toolbox
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
 This project is a streamlined pipeline to use the multiomics tools developed by the Krishnaswamy Lab.
+
+## Setting Up the Environment
+
+To set up the `omics_toolbox` environment, follow these steps:
+
+1. Run the following command to create the environment:
+    ```bash
+    conda env create --file environment.yml
+    ```
+
+    This will install all the required packages and create a Conda environment named `omics_toolbox`.
+
+2. Activate the environment:
+    ```bash
+    conda activate omics_toolbox
+    ```
+
+3. Ensure that the `omics_toolbox` environment is selected as the kernel for all Jupyter notebooks. You can do this by running:
+
+You're now ready to use the `omics_toolbox` environment for your analyses.
+
+> **Note:** Some packages in this project utilize PyTorch and require CUDA for model computations. If you encounter issues, they are often due to incompatibilities between the CUDA version and the package dependencies. Ensure that your CUDA version is compatible with the installed PyTorch and related packages. Refer to the [PyTorch CUDA Compatibility Guide](https://pytorch.org/get-started/previous-versions/) for more details.
+
 
 ## Project Organization
 
