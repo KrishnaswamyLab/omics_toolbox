@@ -11,6 +11,7 @@ dependencies:
   - ipython
   - jupyterlab
   - matplotlib
+  - seaborn
   - notebook
   - numpy 
   - pandas=2.2.0
@@ -19,10 +20,28 @@ dependencies:
   - scanpy 
   - python-igraph 
   - leidenalg
+  - loguru
+  - pytorch
+  - torchvision
+  - tensorboard
   - pip:
     - python-dotenv
     - mkdocs
     - -e .
+    # Dim Changer dependencies
+    - pytorch-lightning
+    - hydra-core
+    - omegaconf
+    - hydra-colorlog
+    - hydra-optuna-sweeper
+    # Krishnaswamy Lab dependencies
     - mioflow
     - phate
     - meld
+    - graphtools
+    # MIOFlow related dependencies
+    - POT
+    - torchdiffeq
+    - torchsde
+
+
