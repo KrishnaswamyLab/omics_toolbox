@@ -10,6 +10,7 @@ dependencies:
   - tqdm
   - ipython
   - jupyterlab
+  - ipywidgets
   - matplotlib
   - seaborn
   - notebook
@@ -21,6 +22,7 @@ dependencies:
   - python-igraph 
   - leidenalg
   - loguru
+  # torch packages
   - pytorch
   - torchvision
   - tensorboard
@@ -39,9 +41,12 @@ dependencies:
     - phate
     - meld
     - graphtools
+    - magic-impute
     # MIOFlow related dependencies
     - POT
     - torchdiffeq
     - torchsde
+    # Visualization
+    - plotly3d
 
 
