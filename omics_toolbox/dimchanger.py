@@ -16,9 +16,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 
 from .decoder import Decoder
- 
-import hydra
-from omegaconf import DictConfig
+
 
 def load_config(config_path: str = "../conf_main", config_name: str = "config") -> DictConfig:
     """Load Hydra config from path"""
@@ -213,7 +211,7 @@ class DimChanger:
               weights: np.ndarray = None,
               save_dir: str = None,
               train_decoder: bool = True,
-              train_reducer: bool = True,
+              train_reducer: bool = False,
               # Shared parameters
               device: str = None,  # Will auto-select best available
               batch_size: int = 32,
