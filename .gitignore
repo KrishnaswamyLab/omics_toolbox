@@ -196,3 +196,6 @@ cython_debug/
 .pypirc
 
 
+# Notebook checkpoints
+notebooks/*/checkpoints/
+notebooks/*/tensorboard_logs/
