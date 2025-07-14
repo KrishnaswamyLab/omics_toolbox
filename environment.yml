@@ -1,4 +1,4 @@
-name: omics_toolbox
+name: omics-toolbox
 channels:
   - conda-forge
   - pytorch
@@ -31,7 +31,7 @@ dependencies:
     - python-dotenv
     - mkdocs
     - -e .
-    # Dim Changer dependencies
+    # PHATE autoencoder dependencies
     - pytorch-lightning
     - hydra-core
     - omegaconf
