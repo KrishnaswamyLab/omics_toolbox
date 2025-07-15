@@ -45,12 +45,9 @@ You're now ready to use the `omics_toolbox` environment for your analyses.
 │
 ├── models             <- Trained and serialized models, model predictions, or model summaries
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
+├── notebooks          <- Jupyter notebooks. Contains the tutorials.
+|
 ├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         omics_toolbox and configuration for tools like black
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │
@@ -62,22 +59,7 @@ You're now ready to use the `omics_toolbox` environment for your analyses.
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
-└── omics_toolbox   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes omics_toolbox a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+└── omics_toolbox   <- Auxiliary functions for the entire environment.
 ```
 
 --------

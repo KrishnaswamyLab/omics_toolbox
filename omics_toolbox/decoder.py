@@ -160,7 +160,6 @@ class Decoder(pl.LightningModule):
                     patience=scheduler_config.patience,
                     factor=scheduler_config.factor,
                     min_lr=scheduler_config.min_lr,
-                    verbose=True
                 )
                 return {
                     "optimizer": optimizer,
