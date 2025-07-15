@@ -12,7 +12,7 @@
 /results/*
 
 #Dimchanger
-/dimension_changer/*
+/phate_autoencoder/*
 !.gitkeep
 
 # Mac OS-specific storage files
