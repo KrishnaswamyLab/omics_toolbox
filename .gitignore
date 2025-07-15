@@ -11,6 +11,10 @@
 # Results
 /results/*
 
+#Dimchanger
+/dimension_changer/*
+!.gitkeep
+
 # Mac OS-specific storage files
 .DS_Store
 
