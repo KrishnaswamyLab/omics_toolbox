@@ -49,5 +49,6 @@ dependencies:
     - torchsde
     # Visualization
     - plotly3d
+    - dgl==1.1.2
 
 
