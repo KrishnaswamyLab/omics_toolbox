@@ -11,7 +11,7 @@
 # Results
 /results/*
 
-#Dimchanger
+#Phate autoencoder
 /phate_autoencoder/*
 !.gitkeep
 
