@@ -1,9 +1,9 @@
-from gode.odeblock import ODEBlock
-from gode.gde import GDEFunc
-from gode.dgl import DGLSAGEConv, DGLGATConv, MeanAttentionLayer
-from gode.utils import get_device
-from gode.data import make_results_dataframe, get_spearmanr, sample_aggregate_group_at_t
-from gode.plots import custom_features_over_time
+from omics_toolbox.gode.odeblock import ODEBlock
+from omics_toolbox.gode.gde import GDEFunc
+from omics_toolbox.gode.dgl import DGLSAGEConv, DGLGATConv, MeanAttentionLayer
+from omics_toolbox.gode.utils import get_device
+from omics_toolbox.gode.data import make_results_dataframe, get_spearmanr, sample_aggregate_group_at_t
+from omics_toolbox.gode.plots import custom_features_over_time
 import os, sys, json, pickle, itertools, numpy as np, pandas as pd, scipy.sparse as sp
 import matplotlib.pyplot as plt, seaborn as sns
 from sklearn.metrics import roc_auc_score
@@ -54,10 +54,14 @@ def get_n_cells_of_type_k_at_time_t(df, n, k, t, genes):
     if (k, t) not in groups.groups:
         values = np.array([[0 for cell in range(n)] for gene in range(n_genes)])
     else:
+        unique_genes = list(pd.unique(genes))
         values = groups.get_group((k, t))\
-            .filter(genes).sample(n, replace=True)\
-            .values.T
-        
+                    .filter(unique_genes).sample(n, replace=True)\
+                    .values.T
+        # values = groups.get_group((k, t))\
+        #        .loc[:, unique_genes].sample(n, replace=True)\
+        #        .values.T
+        # values_list.append(values)
     # e.g. shape = (100 genes, 10 cells)
     genes_x_cells = values
     return genes_x_cells
@@ -69,6 +73,7 @@ def get_n_cells_of_all_types_at_time_t(df, n, t, types=None, genes=None):
         get_n_cells_of_type_k_at_time_t(df, n, k, t, genes=genes)
         for k in types
     ]))
+
 def compute_link_loss(pos_score, neg_score):
     scores = torch.cat([pos_score, neg_score])
     labels = torch.cat([torch.ones(pos_score.shape[0]), torch.zeros(neg_score.shape[0])])
@@ -208,8 +213,14 @@ class RITINI:
                 t1 = time_bins[_t + 1]
 
                 data_t0 = get_n_cells_of_all_types_at_time_t(df_train, n_cells_at_t, t0, genes=top_genes)
-                data_t1 = get_n_cells_of_all_types_at_time_t(df_train, n_cells_at_t, t1, genes=top_genes)  
+                data_t1 = get_n_cells_of_all_types_at_time_t(df_train, n_cells_at_t, t1, genes=top_genes)
+  
                 data_t0 = torch.Tensor(data_t0)
+                # print("Graph num nodes:", train_g.num_nodes())  # Should be 2000
+                # print("Feature matrix shape:", data_t0.shape)   # Should be (2000, F)
+                # data_t0 = data_t0.T  # Transpose to match the expected shape (F, N)
+                # if data_t0.shape[1] == train_g.num_nodes():
+                #     data_t0 = data_t0.T
                 data_t1 = torch.Tensor(data_t1)
 
                 model.train()        
