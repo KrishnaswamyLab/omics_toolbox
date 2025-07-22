@@ -293,7 +293,7 @@ class RITINI:
         time_bins, step_i, steps, num_cell_types, nodes_names, cell_types, tfs, 
         node_map_full, ref_pos, ref_g, data_tps, data_tis, attentions, loss
     ):
-        DATA_DIR = './'
+        DATA_DIR = '../../results'
         model.eval()
         with torch.no_grad():
             _t = 0
@@ -369,14 +369,14 @@ class RITINI:
                 nx.draw_networkx_labels(
                     nx_g, pos=ref_pos, ax=ax,
                     labels=nx.get_node_attributes(ref_g,'label'),
-                    font_size=12, font_color='black'
+                    font_size=8, font_color='black'
                 )
                 nx.draw(
                     nx_g, pos=ref_pos, ax=ax,
                     with_labels=False,
                     node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
                     edge_cmap=plt.cm.magma,
-                    node_size=500, arrowsize=25, alpha=0.7
+                    node_size=100, arrowsize=10, alpha=0.7
                 )
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
                 attentions[step_i] = np.array(attns)
