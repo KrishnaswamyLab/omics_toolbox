@@ -8,6 +8,7 @@
 /data/raw/*
 !.gitkeep
 
+*.h5ad
 # Results
 /results/*
 
