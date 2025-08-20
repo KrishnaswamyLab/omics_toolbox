@@ -24,9 +24,9 @@ dependencies:
   - loguru
   - pyarrow
   # torch packages
-  - pytorch
-  - torchvision
-  - tensorboard
+  # - pytorch
+  # - torchvision
+  # - tensorboard
   - pip:
     - python-dotenv
     - mkdocs
