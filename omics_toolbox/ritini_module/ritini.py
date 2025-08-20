@@ -215,7 +215,7 @@ class RITINI:
                 attns = np.vstack((attns, attn)) if attns.size else attn
 
             attns = np.array(attns)
-            if step_i in np.arange(0, steps, 10):
+            if step_i in np.arange(0, steps, 1):
                 data_ti = torch.Tensor(np.array([t.detach().cpu().numpy() for t in data_tis]))
                 data_tp = torch.Tensor(np.array([t.detach().cpu().numpy() for t in data_tps]))
                 dti = data_ti.detach().numpy()
@@ -232,8 +232,10 @@ class RITINI:
                 fig = custom_features_over_time(
                     df_res, df_corr,
                     col='tf', row='cell_type',
-                    hue='type', x='time', y='expression'
-                )            
+                    hue='type', x='time', y='expression',
+                    #col_wrap=5
+                )
+                plt.show()
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_expression_epoch_{step_i}.png'))
                 nx_g = train_g.to_networkx()
                 fig = plt.figure(figsize=(8, 6))
@@ -250,8 +252,16 @@ class RITINI:
                     edge_cmap=plt.cm.magma,
                     node_size=100, arrowsize=10, alpha=0.7
                 )
+                plt.show()
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
                 attentions[step_i] = np.array(attns)
                 #plot the attention maps
+                # plt.figure(figsize=(12, 6))
+                # sns.heatmap(attns.reshape(len(time_bins)-1, -1), cmap='viridis', cbar=True)
+                # plt.title(f'Attention Scores Heatmap at Epoch {step_i}')
+                # plt.xlabel('Node')
+                # plt.ylabel('Time Bin')
+                # plt.tight_layout()
+                # plt.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_attention_epoch_{step_i}.png'))
                 plt.close('all')
             data_tp = np.array([t.detach().cpu().numpy() for t in data_tps])
