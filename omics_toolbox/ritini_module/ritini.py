@@ -163,15 +163,15 @@ class RITINI:
                 self.test_loop(
                     model, top_genes, df_train, n_cells_at_t, 
                     time_bins, step_i, steps, num_cell_types, nodes_names, cell_types, tfs, 
-                    node_map_full, data_tps, data_tis, attentions, loss
+                    node_map_full, data_tps, data_tis, attentions, loss, DATA_DIR
                 )
 
     def test_loop(
         self, model, top_genes, df_train, n_cells_at_t, 
         time_bins, step_i, steps, num_cell_types, nodes_names, cell_types, tfs, 
-        node_map_full, data_tps, data_tis, attentions, loss
+        node_map_full, data_tps, data_tis, attentions, loss, DATA_DIR='./'
     ):
-        DATA_DIR = '../../results'
+        # DATA_DIR = '../../results'
         model.eval()
         with torch.no_grad():
             _t = 0
