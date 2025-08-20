@@ -64,70 +64,102 @@ def animate_nx_example(
 
 # %% ../nbs/07_plots.ipynb 5
 def custom_features_over_time(
-    df:pd.DataFrame,
-    df_corr:pd.DataFrame,
-    col:str='tf',
-    row:str='cell_type',
-    hue:str='type',
-    x:str='time',
-    y:str='expression'
+    df,
+    df_corr,
+    col='tf',
+    row='cell_type',
+    hue='type',
+    x='time',
+    y='expression',
+    *,
+    col_wrap=5,             # 👈 NEW: max number of TF panels per row
+    panel_size=(4, 3),      # width, height of each small panel (inches)
+    dpi=300,
+    sharex=True,
+    sharey=False,
 ):
-    grid_figsize = [4, 3]
-    
-    
-    cols = np.sort(df[col].unique())
-    rows = np.sort(df[row].unique())
-    hues = np.sort(df[hue].unique())
+    """
+    Same as your original, but supports wrapping the 'col' facets.
+    For each level of `row` (cell_type), TF panels are arranged in rows of `col_wrap`.
+    """
+    # facet levels
+    cols = np.asarray(sorted(df[col].unique()))
+    rows = np.asarray(sorted(df[row].unique()))
+    hues = np.asarray(sorted(df[hue].unique()))
     n_cols = cols.size
     n_rows = rows.size
 
-    dpi = 300
-    grid_figsize = (grid_figsize[0] * n_cols, grid_figsize[1] * n_rows)
-    fig = plt.figure(None, grid_figsize, dpi=dpi)
+    # wrapping math
+    wrap = max(1, int(col_wrap))
+    wrap_rows_per_row = int(np.ceil(n_cols / wrap))          # extra rows per cell_type
+    total_grid_rows = n_rows * wrap_rows_per_row
+    total_grid_cols = min(wrap, n_cols)
 
-    hspace = 0.3
-    wspace = None
-    gspec = plt.GridSpec(n_rows, n_cols, fig, hspace=hspace, wspace=wspace)
-
+    # figure + gridspec
+    fig_w = panel_size[0] * total_grid_cols
+    fig_h = panel_size[1] * total_grid_rows
+    fig = plt.figure(figsize=(fig_w, fig_h), dpi=dpi)
+    gspec = fig.add_gridspec(total_grid_rows, total_grid_cols, hspace=0.35, wspace=0.25)
 
     cmap = plt.get_cmap('tab10')
+    # we’ll collect a legend from the last axes we draw
+    last_ax = None
 
-    axs = []
-    for g, gs in enumerate(gspec):
-        for i, r in enumerate(rows):
-            for j, c in enumerate(cols):
-                ax = plt.subplot(gspec[i, j])
+    # iterate over biological rows (cell types) and TF columns with wrapping
+    for i_row, r in enumerate(rows):
+        for j_col, c in enumerate(cols):
+            # map (i_row, j_col) → (grid_row, grid_col) with wrapping
+            local_row = j_col // wrap                      # 0,1,... within this cell_type
+            local_col = j_col % wrap
+            grid_row = i_row * wrap_rows_per_row + local_row
+            grid_col = local_col
 
-                scors = []
-                for k, h in enumerate(hues):                
-                    df_cur = df[(df[col] == c) & (df[row] == r) & (df[hue] == h)]
-                    ax.plot(df_cur[x], df_cur[y], color=cmap(k), label=h)
-                    xmin, xmax = ax.get_xaxis().get_data_interval()
-                    ymin, ymax = ax.get_yaxis().get_data_interval()
+            ax = fig.add_subplot(gspec[grid_row, grid_col])
+            last_ax = ax
 
-                    if k == len(hues) - 1:
-                        scor = df_corr.loc[c, r].round(3)
-                        s = f'corr: {scor}'
-                        ax.text(
-                            xmin+(xmax-xmin)*0.05, ymin+(ymax-ymin)*0.1, s, fontsize=10,
-                            bbox={'facecolor': 'lightblue', 'alpha': 1, 'pad': 10,}
-                        )
-                        ax.set_title(f'{r} | {c}')
-                        if i == len(rows) - 1:
-                            ax.set_xlabel(x.capitalize())
-                        else:
-                            ax.xaxis.set_ticks([])
+            # plot each hue series
+            for k, h in enumerate(hues):
+                df_cur = df[(df[col] == c) & (df[row] == r) & (df[hue] == h)]
+                ax.plot(df_cur[x], df_cur[y], color=cmap(k), label=h)
 
-                        if j == 0:
-                            ax.set_ylabel(y.capitalize())
+            # correlation box (same as your original)
+            try:
+                scor = float(df_corr.loc[c, r])
+            except Exception:
+                scor = np.nan
+            xmin, xmax = ax.get_xaxis().get_data_interval()
+            ymin, ymax = ax.get_yaxis().get_data_interval()
+            ax.text(
+                xmin + (xmax - xmin) * 0.05,
+                ymin + (ymax - ymin) * 0.10,
+                f'corr: {np.round(scor, 3)}',
+                fontsize=10,
+                bbox={'facecolor': 'lightblue', 'alpha': 1, 'pad': 10}
+            )
 
-    handles, labels = ax.get_legend_handles_labels()
-    gspec.figure.legend(handles[:2], labels[:2], loc='center right')
-    suptitle = fig.suptitle(
-        f'{y.capitalize()} over {x} for various {col} across {row}', 
-        fontsize=20, 
-        bbox={'pad':20,  'facecolor': None, 'alpha':0}
+            # titles / labels
+            ax.set_title(f'{r} | {c}')
+            if sharex and (grid_row % wrap_rows_per_row) != (wrap_rows_per_row - 1):
+                ax.set_xticklabels([])
+            else:
+                ax.set_xlabel(x.capitalize())
+            if sharey and grid_col != 0:
+                ax.set_yticklabels([])
+            else:
+                ax.set_ylabel(y.capitalize())
+
+    # legend on the right
+    if last_ax is not None:
+        handles, labels = last_ax.get_legend_handles_labels()
+        # unique order-preserving
+        uniq = dict(zip(labels, handles))
+        fig.legend(uniq.values(), uniq.keys(), loc='center right')
+
+    fig.suptitle(
+        f'{y.capitalize()} over {x} for various {col} across {row}',
+        fontsize=16, y=0.995
     )
+    fig.tight_layout(rect=[0, 0, 0.92, 0.97])  # leave space for legend + title
     return fig
 
 # %% ../nbs/07_plots.ipynb 6

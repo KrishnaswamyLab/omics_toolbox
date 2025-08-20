@@ -215,7 +215,7 @@ class RITINI:
                 attns = np.vstack((attns, attn)) if attns.size else attn
 
             attns = np.array(attns)
-            if step_i in np.arange(0, steps, 1):
+            if step_i in np.arange(0, steps, 10):
                 data_ti = torch.Tensor(np.array([t.detach().cpu().numpy() for t in data_tis]))
                 data_tp = torch.Tensor(np.array([t.detach().cpu().numpy() for t in data_tps]))
                 dti = data_ti.detach().numpy()
