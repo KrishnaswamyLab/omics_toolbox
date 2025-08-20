@@ -100,7 +100,7 @@ class RITINI:
     def train_loop(
         self, model, optimizer, scheduler, criterion, top_genes,
         train_g, df_train, n_cells_at_t, time_bins, steps, link_step, add_n, del_n,
-        verbose_step, num_cell_types, cell_types, DATA_DIR='./'
+        verbose_step, num_cell_types, cell_types, ref_pos, ref_g, DATA_DIR='./'
     ):
         nodes_names = [top_genes[i] for i in train_g.nodes().numpy()]
         node_map_full = {n:i for i, n in enumerate(nodes_names)}
@@ -161,15 +161,15 @@ class RITINI:
             if step_i % verbose_step == 0:
                 model.eval()
                 self.test_loop(
-                    model, top_genes, df_train, n_cells_at_t, 
+                    model, train_g, top_genes, df_train, n_cells_at_t, 
                     time_bins, step_i, steps, num_cell_types, nodes_names, cell_types, tfs, 
-                    node_map_full, data_tps, data_tis, attentions, loss, DATA_DIR
+                    node_map_full, data_tps, data_tis, attentions, loss, ref_pos, ref_g, DATA_DIR
                 )
 
     def test_loop(
-        self, model, top_genes, df_train, n_cells_at_t, 
+        self, model, train_g, top_genes, df_train, n_cells_at_t, 
         time_bins, step_i, steps, num_cell_types, nodes_names, cell_types, tfs, 
-        node_map_full, data_tps, data_tis, attentions, loss, DATA_DIR='./'
+        node_map_full, data_tps, data_tis, attentions, loss, ref_pos, ref_g, DATA_DIR='./'
     ):
         # DATA_DIR = '../../results'
         model.eval()
@@ -235,22 +235,22 @@ class RITINI:
                     hue='type', x='time', y='expression'
                 )            
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_expression_epoch_{step_i}.png'))
-                # nx_g = train_g.to_networkx()
-                # fig = plt.figure(figsize=(8, 6))
-                # ax = fig.add_subplot(1,1,1)
-                # nx.draw_networkx_labels(
-                #     nx_g, pos=ref_pos, ax=ax,
-                #     labels=nx.get_node_attributes(ref_g,'label'),
-                #     font_size=8, font_color='black'
-                # )
-                # nx.draw(
-                #     nx_g, pos=ref_pos, ax=ax,
-                #     with_labels=False,
-                #     node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
-                #     edge_cmap=plt.cm.magma,
-                #     node_size=100, arrowsize=10, alpha=0.7
-                # )
-                # fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
+                nx_g = train_g.to_networkx()
+                fig = plt.figure(figsize=(8, 6))
+                ax = fig.add_subplot(1,1,1)
+                nx.draw_networkx_labels(
+                    nx_g, pos=ref_pos, ax=ax,
+                    labels=nx.get_node_attributes(ref_g,'label'),
+                    font_size=8, font_color='black'
+                )
+                nx.draw(
+                    nx_g, pos=ref_pos, ax=ax,
+                    with_labels=False,
+                    node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
+                    edge_cmap=plt.cm.magma,
+                    node_size=100, arrowsize=10, alpha=0.7
+                )
+                fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
                 attentions[step_i] = np.array(attns)
                 #plot the attention maps
                 plt.close('all')
