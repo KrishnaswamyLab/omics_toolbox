@@ -237,23 +237,23 @@ class RITINI:
                 )
                 plt.show()
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_expression_epoch_{step_i}.png'))
-                nx_g = train_g.to_networkx()
-                fig = plt.figure(figsize=(8, 6))
-                ax = fig.add_subplot(1,1,1)
-                nx.draw_networkx_labels(
-                    nx_g, pos=ref_pos, ax=ax,
-                    labels=nx.get_node_attributes(ref_g,'label'),
-                    font_size=8, font_color='black'
-                )
-                nx.draw(
-                    nx_g, pos=ref_pos, ax=ax,
-                    with_labels=False,
-                    node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
-                    edge_cmap=plt.cm.magma,
-                    node_size=100, arrowsize=10, alpha=0.7
-                )
-                plt.show()
-                fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
+                # nx_g = train_g.to_networkx()
+                # fig = plt.figure(figsize=(8, 6))
+                # ax = fig.add_subplot(1,1,1)
+                # nx.draw_networkx_labels(
+                #     nx_g, pos=ref_pos, ax=ax,
+                #     labels=nx.get_node_attributes(ref_g,'label'),
+                #     font_size=8, font_color='black'
+                # )
+                # nx.draw(
+                #     nx_g, pos=ref_pos, ax=ax,
+                #     with_labels=False,
+                #     node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
+                #     edge_cmap=plt.cm.magma,
+                #     node_size=100, arrowsize=10, alpha=0.7
+                # )
+                # plt.show()
+                # fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
                 attentions[step_i] = np.array(attns)
                 #plot the attention maps
                 # plt.figure(figsize=(12, 6))
@@ -273,10 +273,41 @@ class RITINI:
                     sns.heatmap(attns[t_idx][np.newaxis, :], cmap='viridis', cbar=True)
                     plt.title(f'Edge Attention Heatmap at Time Bin {t_idx}')
                     plt.xlabel('Edge Index')
-                    # plt.yticks([0], [f'Time Bin {t_idx}'])
                     plt.tight_layout()
                     plt.show()
                     plt.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_attention_epoch_{step_i}_timebin_{t_idx}.png'))
+                    plt.close()
+
+                    # Visualize the graph with only edges above attention threshold (no edge coloring)
+                    nx_g = train_g.to_networkx()
+                    edge_list = list(nx_g.edges())
+                    edge_attn = attns[t_idx]
+
+                    # Threshold attention scores
+                    threshold = 0.1  # You can adjust this value
+                    filtered_edges = [e for i, e in enumerate(edge_list) if edge_attn[i] > threshold]
+
+                    fig = plt.figure(figsize=(8, 6))
+                    ax = fig.add_subplot(1,1,1)
+                    nx.draw_networkx_labels(
+                        nx_g, pos=ref_pos, ax=ax,
+                        labels=nx.get_node_attributes(ref_g,'label'),
+                        font_size=8, font_color='black'
+                    )
+                    nx.draw_networkx_nodes(
+                        nx_g, pos=ref_pos, ax=ax,
+                        node_color=list(nx.get_node_attributes(ref_g, 'color').values()),
+                        node_size=100, alpha=0.7
+                    )
+                    nx.draw_networkx_edges(
+                        nx_g, pos=ref_pos, ax=ax,
+                        edgelist=filtered_edges,
+                        width=2, alpha=0.8
+                    )
+                    plt.title(f'Graph Edge Attention (Threshold>{threshold}) at Time Bin {t_idx}')
+                    plt.tight_layout()
+                    plt.show()
+                    fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_attention_epoch_{step_i}_timebin_{t_idx}.png'))
                     plt.close()
             
             data_tp = np.array([t.detach().cpu().numpy() for t in data_tps])
