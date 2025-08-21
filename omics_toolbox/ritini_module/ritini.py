@@ -252,17 +252,31 @@ class RITINI:
                     edge_cmap=plt.cm.magma,
                     node_size=100, arrowsize=10, alpha=0.7
                 )
-                # plt.show()
+                plt.show()
                 fig.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_graph_epoch_{step_i}.png'))
                 attentions[step_i] = np.array(attns)
                 #plot the attention maps
-                plt.figure(figsize=(12, 6))
-                sns.heatmap(attns.reshape(len(time_bins)-1, -1), cmap='viridis', cbar=True)
-                plt.title(f'Attention Scores Heatmap at Epoch {step_i}')
-                plt.xlabel('Node')
-                plt.ylabel('Time Bin')
-                plt.tight_layout()
-                plt.show()
-                plt.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_attention_epoch_{step_i}.png'))
+                # plt.figure(figsize=(12, 6))
+                # sns.heatmap(attns.reshape(len(time_bins)-1, -1), cmap='viridis', cbar=True)
+                # plt.title(f'Attention Scores Heatmap at Epoch {step_i}')
+                # plt.xlabel('Node')
+                # plt.ylabel('Time Bin')
+                # plt.tight_layout()
+                # plt.show()
+                # plt.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_attention_epoch_{step_i}.png'))
                 plt.close('all')
+            # Plot edge-level attention heatmap for each time bin ONLY for last epoch
+            if step_i == steps - 1:
+                for t_idx in range(attns.shape[0]):
+                    plt.figure(figsize=(12, 2))
+                    import seaborn as sns
+                    sns.heatmap(attns[t_idx][np.newaxis, :], cmap='viridis', cbar=True)
+                    plt.title(f'Edge Attention Heatmap at Time Bin {t_idx}')
+                    plt.xlabel('Edge Index')
+                    # plt.yticks([0], [f'Time Bin {t_idx}'])
+                    plt.tight_layout()
+                    plt.show()
+                    plt.savefig(os.path.join(DATA_DIR, f'{n_cells_at_t}_cells_attention_epoch_{step_i}_timebin_{t_idx}.png'))
+                    plt.close()
+            
             data_tp = np.array([t.detach().cpu().numpy() for t in data_tps])
