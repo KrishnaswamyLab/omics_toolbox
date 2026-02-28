@@ -8,10 +8,10 @@ from scipy.stats import wasserstein_distance
 
 class sergio (object):
 
-    def __init__(self,number_genes, number_bins, number_sc, noise_params,\
-    noise_type, decays, dynamics = False, sampling_state = 10, tol = 1e-3,\
-    window_length = 100, dt = 0.01, optimize_sampling = False,\
-    bifurcation_matrix = None, noise_params_splice = None, noise_type_splice = None,\
+    def __init__(self,number_genes, number_bins, number_sc, noise_params,
+    noise_type, decays, dynamics = False, sampling_state = 10, tol = 1e-3,
+    window_length = 100, dt = 0.01, optimize_sampling = False,
+    bifurcation_matrix = None, noise_params_splice = None, noise_type_splice = None,
     splice_ratio = 4, dt_splice = 0.01, migration_rate = None):
         """
         Noise is a gaussian white noise process with zero mean and finite variance.
