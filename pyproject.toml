@@ -31,7 +31,9 @@ dependencies = [
     "seaborn",
     # Utilities
     "loguru",
+    "requests",
     "tqdm",
+    "gdown>=5.2.1",
 ]
 
 [project.optional-dependencies]
