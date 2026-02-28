@@ -4,18 +4,46 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "omics_toolbox"
-version = "0.0.1"
-description = "This project is a streamlined pipeline to use the multiomics tools developed by the Krishnaswamy Lab."
+version = "0.1.0"
+description = "Central utility package for Krishnaswamy Lab multiomics tools."
 authors = [
   { name = "Krishnaswamy Lab" },
 ]
-
 readme = "README.md"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
-    
 ]
-requires-python = "~=3.10"
+dependencies = [
+    # Krishnaswamy Lab packages
+    "phate",
+    "mioflow",
+    "meld",
+    "graphtools",
+    "magic-impute",
+    # Core scientific stack
+    "numpy",
+    "pandas",
+    "scanpy",
+    "scikit-learn",
+    "scipy",
+    "matplotlib",
+    "seaborn",
+    # Utilities
+    "loguru",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+notebooks = [
+    "jupyterlab",
+    "notebook",
+    "ipywidgets",
+]
+dev = [
+    "ruff",
+    "jupyterlab",
+]
 
 
 [tool.ruff]
@@ -24,9 +52,8 @@ src = ["omics_toolbox"]
 include = ["pyproject.toml", "omics_toolbox/**/*.py"]
 
 [tool.ruff.lint]
-extend-select = ["I"]  # Add import sorting
+extend-select = ["I"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["omics_toolbox"]
 force-sort-within-sections = true
-
