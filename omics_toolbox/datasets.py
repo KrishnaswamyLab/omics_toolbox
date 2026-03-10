@@ -64,6 +64,14 @@ def download_embryoid_body(download_path="~/scRNAseq"):
     ``download_path``, or extract the folders there directly.
     """
     download_path = os.path.expanduser(download_path)
+    dest_dir = os.path.join(download_path, "scRNAseq")
+
+    # --- Skip if already downloaded ----------------------------------------
+    expected_subdirs = {"T0_1A", "T2_3B", "T4_5C", "T6_7D", "T8_9E"}
+    if os.path.isdir(dest_dir) and expected_subdirs.issubset(os.listdir(dest_dir)):
+        print(f"Dataset already exists at: {dest_dir} — skipping download.")
+        return dest_dir
+
     os.makedirs(download_path, exist_ok=True)
 
     zip_file = os.path.join(download_path, "scRNAseq.zip")
@@ -102,10 +110,6 @@ def download_embryoid_body(download_path="~/scRNAseq"):
         )
 
     # --- Extract -----------------------------------------------------------
-    # The public API delivers scRNAseq.zip directly (no outer wrapper zip).
-    # Contents may be under a scRNAseq/ subfolder or at the root of the zip.
-    
-    dest_dir = os.path.join(download_path, "scRNAseq")
     temp_extract = os.path.join(download_path, "_temp_extract")
     os.makedirs(temp_extract, exist_ok=True)
 
