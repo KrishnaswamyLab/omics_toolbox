@@ -10,4 +10,4 @@ from omics_toolbox.gene import gene
 from omics_toolbox.sergio import sergio
 
 # Dataset utilities
-from omics_toolbox.datasets import download_embryoid_body, download_cancer_plasticity
+from omics_toolbox.datasets import download_embryoid_body, download_cancer_plasticity, download_sergio

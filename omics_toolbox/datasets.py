@@ -135,6 +135,9 @@ def download_embryoid_body(download_path="~/scRNAseq"):
     return dest_dir
 
 
+_SERGIO_FILE_ID = "1D5YguNDt8QxFkId0zCe4dQ_04COvtvaq"
+_SERGIO_DS9_FILENAME = "SERGIO_sim_DS9.h5ad"
+
 _CANCER_PLASTICITY_FOLDER_ID = "1maxTkGZxo0cZ7zEW5i3pz2cbFSxdBP-v"
 _CANCER_PLASTICITY_SAMPLES = [
     "HCC38_2D_culture",
@@ -143,6 +146,58 @@ _CANCER_PLASTICITY_SAMPLES = [
     "TSA-D18",
     "TSA-D30",
 ]
+
+
+def download_sergio(download_path="~/sergio_data"):
+    """Download the SERGIO simulation dataset (DS9) from Google Drive.
+
+    The dataset is a pre-processed AnnData (h5ad) file of a SERGIO gene
+    regulatory network simulation used in the MIOFlow tutorials.
+
+    Parameters
+    ----------
+    download_path : str
+        Directory where the data will be saved. Defaults to ``~/sergio_data``.
+
+    Returns
+    -------
+    str
+        Absolute path to the downloaded ``SERGIO_sim_DS9.h5ad`` file.
+
+    Directory structure after download::
+
+        <download_path>/
+        └── DS9/
+            └── SERGIO_sim_DS9.h5ad
+
+    Notes
+    -----
+    Requires ``gdown``: ``pip install gdown``.
+    """
+    try:
+        import gdown
+    except ImportError as exc:
+        raise ImportError(
+            "gdown is required to download the SERGIO dataset.\n"
+            "Install it with: pip install gdown"
+        ) from exc
+
+    download_path = os.path.expanduser(download_path)
+    dest_dir = os.path.join(download_path, "DS9")
+    dest_file = os.path.join(dest_dir, _SERGIO_DS9_FILENAME)
+
+    if os.path.isfile(dest_file):
+        print(f"SERGIO dataset already exists at: {dest_file} — skipping download.")
+        return dest_file
+
+    os.makedirs(dest_dir, exist_ok=True)
+
+    file_url = f"https://drive.google.com/uc?id={_SERGIO_FILE_ID}"
+    print("Downloading SERGIO simulation data from Google Drive...")
+    gdown.download(file_url, dest_file, quiet=False)
+
+    print(f"\nDone! SERGIO data is at: {dest_file}")
+    return dest_file
 
 
 def download_cancer_plasticity(download_path="~/cancer_plasticity"):
