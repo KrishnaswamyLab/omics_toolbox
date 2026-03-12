@@ -7,6 +7,8 @@
 !.gitkeep
 /data/raw/*
 !.gitkeep
+/data/configs/*
+!.gitkeep
 
 *.h5ad
 # Results
