@@ -33,6 +33,7 @@ dependencies = [
     "requests",
     "tqdm",
     "gdown>=5.2.1",
+    "ritini>=0.0.2",
 ]
 
 [project.optional-dependencies]
